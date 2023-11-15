@@ -3,7 +3,7 @@ import Titulo from "../../Titulo/Titulo";
 import "./TipoEventosPage.css";
 import MainContent from "../../MainContent/MainContent";
 import ImageIllustrator from "../../ImageIllustrator/ImageIllustrator";
-import eventTypeImage from "../../../assets/images/default-image.jpeg";
+import eventTypeImage from "../../../assets/images/tipo-evento.svg";
 import Container from "../../Container/Container";
 import { Input, Button } from "../../../components/FormComponents/FormComponents";
 import api from "../../../Services/Services"
@@ -79,6 +79,10 @@ const TipoEventosPage = () => {
                 )}
               </form>
             </div>
+            <div className="buttons-box">
+
+
+            
             <Button
             textButton={"Cadastrar"}
             id={"cadastrar"}
@@ -93,10 +97,44 @@ const TipoEventosPage = () => {
             type={"submit"}
             />
 
-            
+          </div>
+
+          
             
           </Container>
         </section>
+
+        <section className="lista-eventos-section">
+          <Container>
+            
+          <Titulo titleText={"Lista de Eventos"}
+          additionalClass={"cor-titulo"}
+          color={"white"}/>
+          <div className="texts-box" style={{display:"flex"}}>
+          <p style={{color: "white", paddingRight:80 + "%"}} >Título</p>
+          <p style={{color: "white", paddingRight: 30 + "px"}}>Editar</p>
+          <p style={{color: "white"}}>Deletar</p>
+
+          </div>
+           <hr style={{width: 100 + "%", height: 1+ "px"}}/>
+          
+
+                  <div className="buttons-box" style={{display: "flex", alignItems: "row", justifyContent:"center"}}>
+                    
+                 
+                 
+
+
+
+                  </div>
+                 
+
+
+          
+
+          </Container>
+
+          </section>
       </MainContent>
     </div>
   );

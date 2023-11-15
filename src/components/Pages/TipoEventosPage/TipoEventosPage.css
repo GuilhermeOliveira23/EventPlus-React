@@ -39,6 +39,16 @@
     gap: 20px;
     justify-content: 'space-between';
 }
+.buttons-box{
+display: flex;
+justify-content: space-between;
+
+
+}
+.button-component{
+margin-right: 40px;
+border: 2px solid black;
+}
 
 @media screen and (min-width: 1200px){
     
@@ -52,4 +62,5 @@
     .buttons-editbox {
         flex-direction: row;
     }
+   
 }
