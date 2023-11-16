@@ -7,14 +7,34 @@ import eventTypeImage from "../../../assets/images/tipo-evento.svg";
 import Container from "../../Container/Container";
 import { Input, Button } from "../../../components/FormComponents/FormComponents";
 import api from "../../../Services/Services"
+import TableTp from "./TableTp/TableTp";
 
 
 const TipoEventosPage = () => {
   const [frmEdit, setFrmEdit] = useState(false);
   const [titulo, setTitulo]= useState("Edward Elric"); //está em modo de edição?
+  const [tipoEventos,setTipoEventos] = useState([
+    
+     {idTipoEvento: "123", titulo: "Evento ABC"},
+     {idTipoEvento: "555", titulo: "Evento xpto"},
+     {idTipoEvento: "778", titulo: "Evento de JavaScript"}
+    
+  ]);//array mocado
 
+ 
+  function handleDelete(){
+    alert("Apagar na api");
+  }
+//EDITAR CADASTRO
+function showUpdateForm(){
+  alert("Mostrando a tela de update")
+
+}
   function handleUpdate() {
     alert("Bora Atualizar");
+  }
+  function editActionAbort() {
+    alert("Cancelar a tela de edição de dados");
   }
   async function handleSubmit(e) {
     e.preventDefault();
@@ -40,6 +60,7 @@ const TipoEventosPage = () => {
   return (
     <div>
       <MainContent>
+        {/* Cadastro de tipos de eventos */}
         <section className="cadastro-evento-section">
           <Container>
             <div className="cadastro-evento__box">
@@ -103,35 +124,23 @@ const TipoEventosPage = () => {
             
           </Container>
         </section>
-
+        {/* Listagem de tipos de eventos */}
         <section className="lista-eventos-section">
           <Container>
             
-          <Titulo titleText={"Lista de Eventos"}
+          <Titulo titleText={"Lista Tipo de Eventos"}
           additionalClass={"cor-titulo"}
           color={"white"}/>
-          <div className="texts-box" style={{display:"flex"}}>
-          <p style={{color: "white", paddingRight:80 + "%"}} >Título</p>
-          <p style={{color: "white", paddingRight: 30 + "px"}}>Editar</p>
-          <p style={{color: "white"}}>Deletar</p>
-
-          </div>
-           <hr style={{width: 100 + "%", height: 1+ "px"}}/>
           
 
-                  <div className="buttons-box" style={{display: "flex", alignItems: "row", justifyContent:"center"}}>
-                    
-                 
-                 
+        <TableTp
+        dados={tipoEventos}
+        fnUpdate={showUpdateForm}
+        fnDelete={handleDelete}
+        />
 
-
-
-                  </div>
-                 
-
-
+        
           
-
           </Container>
 
           </section>
