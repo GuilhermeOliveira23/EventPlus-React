@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Titulo from "../../Titulo/Titulo";
 import "./TipoEventosPage.css";
 import MainContent from "../../MainContent/MainContent";
@@ -8,22 +8,64 @@ import Container from "../../Container/Container";
 import { Input, Button } from "../../../components/FormComponents/FormComponents";
 import api from "../../../Services/Services"
 import TableTp from "./TableTp/TableTp";
+import Notification from "../../../components/Notification/Notification"
+
 
 
 const TipoEventosPage = () => {
+  const [notifyUser, setNotifyUser] = useState({});
   const [frmEdit, setFrmEdit] = useState(false);
   const [titulo, setTitulo]= useState("Edward Elric"); //está em modo de edição?
+  //array mocado
+
+//Use effect pode ter dois parâmetros, uma function e 
+  useEffect(()=> {
+    // chamar a api
+    async function getTipoEventos() {
+      try {
+        const promise = await api.get("/TiposEvento");
+        
+        
+  
+        setTipoEventos(promise.data);
+  
+      } catch (error) {
+        console.log('Deu ruim na api');
+        console.log(error);
+      }
+    }
+
+    getTipoEventos();
+      console.log("A Página Tipo de Eventos FOI MONTADA!!!!");
+  }, []);
+
   const [tipoEventos,setTipoEventos] = useState([
     
-     {idTipoEvento: "123", titulo: "Evento ABC"},
-     {idTipoEvento: "555", titulo: "Evento xpto"},
-     {idTipoEvento: "778", titulo: "Evento de JavaScript"}
-    
-  ]);//array mocado
-
+    {idTipoEvento: "123", titulo: "Evento ABC"},
+    {idTipoEvento: "555", titulo: "Evento xpto"},
+    {idTipoEvento: "778", titulo: "Evento de JavaScript"}
+   
+ ]);
  
-  function handleDelete(){
-    alert("Apagar na api");
+//  const deleteById = id => {
+//   setFruits(oldValues => {
+//     return oldValues.filter(tipoEventos => tipoEventos.idTipoEventos !== id)
+//   })
+ 
+ async function handleDelete(idEvento){
+    
+    try {
+  //deleta o objeto
+    const retorno = await api.delete(`/TiposEvento/${idEvento}`)
+    alert("Registro apagado com sucesso")
+  
+    const retornoGet = await api.get(`/TiposEvento`)
+      
+    setTipoEventos(retornoGet.data);
+
+    } catch (error) {
+      console.log("Deu ruim na api")
+    }
   }
 //EDITAR CADASTRO
 function showUpdateForm(){
@@ -31,7 +73,11 @@ function showUpdateForm(){
 
 }
   function handleUpdate() {
-    alert("Bora Atualizar");
+    try {
+      
+    } catch (error) {
+      
+    }
   }
   function editActionAbort() {
     alert("Cancelar a tela de edição de dados");
@@ -47,6 +93,15 @@ function showUpdateForm(){
     try {
       const retorno = await api.post("/TiposEvento", {titulo:titulo})
 
+      setNotifyUser({
+        titleNote : "Título não informado",
+        textNote : "Mensagem não informada",
+        imgIcon : "default",
+        imgAlt : "Icone da ilustração",
+        showMessage : false,
+        setNotifyUser,
+      })
+
       console.log("CADASTRADO COM SUCESSO")
       console.log(retorno.data)
     } catch (error) {
@@ -54,12 +109,13 @@ function showUpdateForm(){
       console.log(error);
     }
 
-    
   }
 
   return (
     <div>
       <MainContent>
+        <Notification {...notifyUser} setNotifyUser={setNotifyUser}/>
+        
         {/* Cadastro de tipos de eventos */}
         <section className="cadastro-evento-section">
           <Container>
@@ -139,8 +195,6 @@ function showUpdateForm(){
         fnDelete={handleDelete}
         />
 
-        
-          
           </Container>
 
           </section>

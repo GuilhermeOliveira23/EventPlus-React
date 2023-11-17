@@ -33,7 +33,7 @@ const Tabletp = ({dados, fnDelete = null, fnUpdate = null}) => {
                 <td className="table-data__data table-data__data--little">
                   <img className="table-data__icon" src={trashDelete}alt="" onClick={
                        () =>{
-                          fnDelete();
+                          fnDelete(tp.idTipoEvento);
                           }} />
                 </td>
               </tr> 
