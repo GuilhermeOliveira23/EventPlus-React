@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './EventosPage.css'
 import MainContent from '../../MainContent/MainContent';
 import Container from '../../Container/Container';
@@ -8,13 +8,41 @@ import api from '../../../Services/Services'
 import Titulo from '../../Titulo/Titulo';
 const EventosPage = () => {
   const [frmEdit, setFrmEdit] = useState(false)
-  const [nome, setNome] = useState("")
+  const [nomeEvento, setNomeEvento] = useState("")
   const [dataEvento, setDataEvento] = useState("")
   const [descricao, setDescricao] = useState("")
   const [idInstituicao, setIdInstituicao] = useState("")
   
+  useEffect(()=> {
+    // chamar a api
+    async function getEventos() {
+      try {
+        const promise = await api.get("/Evento");
+        
+        setEventos(promise.data);
+  
+      } catch (error) {
+        console.log('Deu ruim na api');
+        console.log(error);
+      }
+    }
+
+    getEventos();
+      console.log("A Página Tipo de Eventos FOI MONTADA!!!!");
+  }, []);
+  const [Eventos, setEventos] = useState(
+  [
+    {IdEvento: "123", nomeEvento:"Criar api Bradesco" ,
+     dataEvento: "11/23/2010",descricao: "Trabalhar",
+     idInstituicao:"3fa85f64-5717-4562-b3fc-2c963f66afa6",idTipoEvento: "123"} 
+
+
+
+  ]);
+
+
   function handleUpdate(e){
-    return
+    
   }
 
 
