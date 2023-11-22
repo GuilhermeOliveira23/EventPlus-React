@@ -7,6 +7,9 @@ import { Input, Button } from "../../FormComponents/FormComponents";
 import api from "../../../Services/Services";
 import Titulo from "../../Titulo/Titulo";
 import eventImage from "../../../assets/images/evento.svg";
+import TableEv from "./TableEv/TableEv";
+import Notification from "../../Notification/Notification";
+
 const EventosPage = () => {
   const [frmEdit, setFrmEdit] = useState(false);
   const [nomeEvento, setNomeEvento] = useState("");
@@ -14,14 +17,21 @@ const EventosPage = () => {
   const [descricao, setDescricao] = useState("");
   const [idInstituicao, setIdInstituicao] = useState("");
   const [idTipoEvento, setIdTipoEvento] = useState(null)
+  const [notifyUser, setNotifyUser] = useState({});
+  
 
   useEffect(() => {
     // chamar a api
     async function getEventos() {
       try {
         const promise = await api.get("/Evento");
+        const promiseTipoEventos = await api.get("/TiposEvento")
+        const promiseInstituicao = await api.get("/Instituicao")
 
         setEventos(promise.data);
+        setInstituicao(promiseInstituicao.data);
+        setTipoEventos(promiseTipoEventos.data); 
+        console.log(promise.data)
       } catch (error) {
         console.log("Deu ruim na api");
         console.log(error);
@@ -31,23 +41,48 @@ const EventosPage = () => {
     getEventos();
     console.log("A Página Tipo de Eventos FOI MONTADA!!!!");
   }, []);
-  const [Eventos, setEventos] = useState([
+
+const [tipoEventos, setTipoEventos] = useState();
+const [instituicao, setInstituicao] = useState();
+
+
+  const [eventos, setEventos] = useState([
     {
-      IdEvento: "123",
       nomeEvento: "Criar api Bradesco",
-      dataEvento: "11/23/2010",
+      dataEvento: "23/11/2023",
       descricao: "Trabalhar",
-      idInstituicao: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      idInstituicao: "213",
       idTipoEvento: "123",
     },
   ]);
 
+  async function showUpdateForm(){
+
+
+
+  }
   function handleUpdate(e) {
     e.preventDefault();
   }
 
   async function handleSubmit(e) {
     e.preventDefault();
+  }
+  async function handleDelete(id){
+
+    try {
+      const retorno = await api.delete("/Evento/" + id)
+      alert("DELETADO COM SUCESSO")
+
+
+      const retornoGet = await api.get("/Evento")
+      setEventos(retornoGet.data)
+
+    } catch (error) {
+      console.log("Deu ruim na api")
+
+    }
+  
   }
 
   return (
@@ -90,7 +125,9 @@ const EventosPage = () => {
                   }}
                 />
                {/* idInstituicao  e idTipoEvento vão ser select */}
+                  
 
+                  
 
                 <Input
                   id={"dataEvento"}
@@ -103,6 +140,9 @@ const EventosPage = () => {
                     setDataEvento(e.target.value);
                   }}
                 />
+                
+
+
                 <Button
                 textButton={"Cadastrar"}
                 id={"cadastrar"}
@@ -170,7 +210,10 @@ const EventosPage = () => {
       </Container>
       <section className="lista-eventos-section">
         <Container>
-          
+        <TableEv
+        dados={eventos}
+        fnUpdate={showUpdateForm}
+        fnDelete={handleDelete} />
         </Container>
 
       </section>

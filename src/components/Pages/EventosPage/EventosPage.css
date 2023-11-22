@@ -17,6 +17,14 @@
     /* border: 1px solid blue; */
 }
 
+.lista-eventos-section {
+    background-color: var(--color-red);
+    width: 100%;
+    padding-bottom: 50px;
+    overflow: auto;
+    /* height: 432px; */
+}
+
 @media screen and (min-width: 1200px) {
     .cadastro-evento__box {
         justify-content: space-between;
