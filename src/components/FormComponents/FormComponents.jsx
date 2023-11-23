@@ -43,3 +43,81 @@ return(
 )
 
 }
+
+
+
+
+export const Select = ({
+    options = [],
+    id,
+    name ,
+    required,
+    manipulationFunction,
+    defaultValue,
+    additionalClass
+}) => {
+return(
+    
+<select 
+ name={name}
+ id={id}
+ required = {required}
+ className={`input-component ${additionalClass}`}
+ onChange={manipulationFunction}
+ value={defaultValue}
+
+  >
+    <option value="">Selecione a Instituicao</option>
+
+    {options.map((opt) => {
+        return (
+            <option  key= {opt.idInstituicao} value={opt.idInstituicao}>{opt.nomeFantasia}</option>
+            
+        )
+    })}
+    
+
+</select>
+
+);
+
+
+
+}
+export const SelectEv = ({
+    options = [],
+    id,
+    name ,
+    required,
+    manipulationFunction,
+    defaultValue,
+    additionalClass
+}) => {
+return(
+    
+<select 
+ name={name}
+ id={id}
+ required = {required}
+ className={`input-component ${additionalClass}`}
+ onChange={manipulationFunction}
+ value={defaultValue}
+
+  >
+    <option value="">Selecione o Tipo de Evento</option>
+
+    {options.map((opt) => {
+        return (
+            <option  key= {opt.idTipoEvento} value={opt.idTipoEvento}>{opt.titulo}</option>
+            
+        )
+    })}
+    
+
+</select>
+
+);
+
+
+
+}

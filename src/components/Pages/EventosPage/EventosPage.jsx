@@ -3,7 +3,7 @@ import "./EventosPage.css";
 import MainContent from "../../MainContent/MainContent";
 import Container from "../../Container/Container";
 import ImageIllustrator from "../../ImageIllustrator/ImageIllustrator";
-import { Input, Button } from "../../FormComponents/FormComponents";
+import { Input, Button, Select, SelectEv } from "../../FormComponents/FormComponents";
 import api from "../../../Services/Services";
 import Titulo from "../../Titulo/Titulo";
 import eventImage from "../../../assets/images/evento.svg";
@@ -15,9 +15,11 @@ const EventosPage = () => {
   const [nomeEvento, setNomeEvento] = useState("");
   const [dataEvento, setDataEvento] = useState("");
   const [descricao, setDescricao] = useState("");
-  const [idInstituicao, setIdInstituicao] = useState("");
-  const [idTipoEvento, setIdTipoEvento] = useState(null)
+  const [tipoEventos, setTipoEventos] = useState([]);
+  const [instituicao, setInstituicao] = useState([]);
+
   const [notifyUser, setNotifyUser] = useState({});
+  
   
 
   useEffect(() => {
@@ -28,6 +30,10 @@ const EventosPage = () => {
         const promiseTipoEventos = await api.get("/TiposEvento")
         const promiseInstituicao = await api.get("/Instituicao")
 
+        const options = [
+          {value:promise, text: "aaaa"},
+          {value:123, text: "aaa"}
+      ]
         setEventos(promise.data);
         setInstituicao(promiseInstituicao.data);
         setTipoEventos(promiseTipoEventos.data); 
@@ -41,10 +47,6 @@ const EventosPage = () => {
     getEventos();
     console.log("A Página Tipo de Eventos FOI MONTADA!!!!");
   }, []);
-
-const [tipoEventos, setTipoEventos] = useState();
-const [instituicao, setInstituicao] = useState();
-
 
   const [eventos, setEventos] = useState([
     {
@@ -74,17 +76,25 @@ const [instituicao, setInstituicao] = useState();
       }
       
       try {
-      const retorno = await api.post('/Evento', {nomeEvento:nomeEvento, dataEvento:dataEvento, descricao:descricao, idInstituicao:idInstituicao , idTipoEvento:idTipoEvento})
-      setEventos(retorno.data)
+      const retorno = await api.post('/Evento', {
+        nomeEvento:nomeEvento, 
+        dataEvento:dataEvento,
+        descricao:descricao , 
+        idInstituicao:instituicao,
+        idTipoEvento:tipoEventos
+        })
 
-      const retornoEventos = await api.get('/Evento')
-      const retornoTipoEventos = await api.get("/TiposEvento")
-      const retornoInstituicao = await api.get("/Instituicao")
-      setEventos(retornoEventos.data);
-      setTipoEventos(retornoTipoEventos.data)
-      setInstituicao(retornoInstituicao.data)
-      console.log(retornoEventos.data)
-        
+      const retornoGet = await api.get("/Evento")
+      setEventos(retornoGet.data)
+      
+      console.log(retornoGet.data)
+      setNomeEvento("");
+      setDescricao("");
+      setDataEvento("");
+      setInstituicao("");
+      setTipoEventos("");
+        alert("Cadastrado com sucesso");
+      
       } catch (error) {
         console.log("Deu ruim na api")
         console.log(error)
@@ -148,9 +158,7 @@ const [instituicao, setInstituicao] = useState();
                   }}
                 />
                {/* idInstituicao  e idTipoEvento vão ser select */}
-                  
-
-                  
+                
 
                 <Input
                   id={"dataEvento"}
@@ -163,6 +171,14 @@ const [instituicao, setInstituicao] = useState();
                     setDataEvento(e.target.value);
                   }}
                 />
+                <Select options={instituicao}
+               
+                
+                />
+                <SelectEv options={tipoEventos}
+                />
+                
+
                 
 
 
