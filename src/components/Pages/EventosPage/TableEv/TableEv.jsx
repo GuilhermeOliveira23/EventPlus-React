@@ -25,20 +25,20 @@ const TableEv = ({ dados, fnUpdate = null, fnDelete = null }) => {
               <td className="table-data__head-title">{ev.idInstitucao}</td>
 
               <td className="table-data__head-title--little">
-                <img
+                <img className="table-data__icon"
                   src={editPen}
                   alt=""
                   onClick={() => {
-                    fnUpdate();
+                    fnUpdate(ev.idEvento);
                   }}
                 />
               </td>
               <td className="table-data__head-title-little">
-                <img
+                <img className="table-data__icon"
                   src={trashDelete}
                   alt=""
                   onClick={() => {
-                    fnDelete();
+                    fnDelete(ev.idEvento);
                   }}
                 />
               </td>

@@ -67,6 +67,29 @@ const [instituicao, setInstituicao] = useState();
 
   async function handleSubmit(e) {
     e.preventDefault();
+    
+    if (nomeEvento.trim().lenght < 3) {
+      alert("Nome deve ter mais de 3 caracteres")
+      return;
+      }
+      
+      try {
+      const retorno = await api.post('/Evento', {nomeEvento:nomeEvento, dataEvento:dataEvento, descricao:descricao, idInstituicao:idInstituicao , idTipoEvento:idTipoEvento})
+      setEventos(retorno.data)
+
+      const retornoEventos = await api.get('/Evento')
+      const retornoTipoEventos = await api.get("/TiposEvento")
+      const retornoInstituicao = await api.get("/Instituicao")
+      setEventos(retornoEventos.data);
+      setTipoEventos(retornoTipoEventos.data)
+      setInstituicao(retornoInstituicao.data)
+      console.log(retornoEventos.data)
+        
+      } catch (error) {
+        console.log("Deu ruim na api")
+        console.log(error)
+      }
+    
   }
   async function handleDelete(id){
 
