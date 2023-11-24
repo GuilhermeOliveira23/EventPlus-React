@@ -12,11 +12,18 @@ import Notification from "../../Notification/Notification";
 
 const EventosPage = () => {
   const [frmEdit, setFrmEdit] = useState(false);
+
+  const [eventos, setEventos] = useState([]);
+  const [tipoEventos, setTipoEventos] = useState([]);
+  const [instituicao, setInstituicao] = useState([]);
+  //Variáveis
   const [nomeEvento, setNomeEvento] = useState("");
   const [dataEvento, setDataEvento] = useState("");
   const [descricao, setDescricao] = useState("");
-  const [tipoEventos, setTipoEventos] = useState([]);
-  const [instituicao, setInstituicao] = useState([]);
+  const [tEventos, setTEventos] = useState("")
+  const [idInstituicao, setIdInstituicao] = useState("")
+
+  
 
   const [notifyUser, setNotifyUser] = useState({});
   
@@ -30,10 +37,7 @@ const EventosPage = () => {
         const promiseTipoEventos = await api.get("/TiposEvento")
         const promiseInstituicao = await api.get("/Instituicao")
 
-        const options = [
-          {value:promise, text: "aaaa"},
-          {value:123, text: "aaa"}
-      ]
+       
         setEventos(promise.data);
         setInstituicao(promiseInstituicao.data);
         setTipoEventos(promiseTipoEventos.data); 
@@ -48,27 +52,61 @@ const EventosPage = () => {
     console.log("A Página Tipo de Eventos FOI MONTADA!!!!");
   }, []);
 
-  const [eventos, setEventos] = useState([
-    {
-      nomeEvento: "Criar api Bradesco",
-      dataEvento: "23/11/2023",
-      descricao: "Trabalhar",
-      idInstituicao: "213",
-      idTipoEvento: "123",
-    },
-  ]);
+  
 
-  async function showUpdateForm(){
-
+  async function showUpdateForm(idEvento){
+    setFrmEdit(true)
+    try {
+    const retornoGetById = await api.get("/Evento/" + idEvento)
+    setNomeEvento(retornoGetById.data.nomeEvento);
+    setDescricao(retornoGetById.data.descricao);
+    setDataEvento(retornoGetById.data.dataEvento);
+    setIdInstituicao(retornoGetById.data.instituicao.nomeFantasia);
+    setTEventos(retornoGetById.data.tipoEventos.titulo);
+    
+    } catch (error) {
+      console.log("deu ruim no showUpdate")
+      console.log(error)
+    }
+    
 
 
   }
-  function handleUpdate(e) {
+  function editActionAbort() {
+    
+    setFrmEdit(false);
+    setNomeEvento("");
+    setDescricao("");
+    setDataEvento("");
+    setIdInstituicao([]);
+    setTEventos([]);
+    
+  }
+
+   async function handleUpdate(e) {
     e.preventDefault();
+    try {
+      // const retornoAtualizar =  await api.put("/Evento/"+ idEvento,
+      // {nomeEvento:nomeEvento,
+      // descricao:descricao,
+      // dataEvento:dataEvento,
+      // IdTipoEvento: tEventos,
+      // idInstituicao: idInstituicao
+      // })
+      console.log("Atualizado com sucesso")
+      const retornoGet = await api.get("/Evento")
+      setEventos(retornoGet.data);
+      editActionAbort();
+
+    } catch (error) {
+      console.log("Deu erro no update")
+    }
+   
   }
 
   async function handleSubmit(e) {
     e.preventDefault();
+    alert("Cadastro indo")
     
     if (nomeEvento.trim().lenght < 3) {
       alert("Nome deve ter mais de 3 caracteres")
@@ -80,8 +118,8 @@ const EventosPage = () => {
         nomeEvento:nomeEvento, 
         dataEvento:dataEvento,
         descricao:descricao , 
-        idInstituicao:instituicao,
-        idTipoEvento:tipoEventos
+        idInstituicao:idInstituicao,
+        idTipoEvento:tEventos
         })
 
       const retornoGet = await api.get("/Evento")
@@ -91,8 +129,8 @@ const EventosPage = () => {
       setNomeEvento("");
       setDescricao("");
       setDataEvento("");
-      setInstituicao("");
-      setTipoEventos("");
+      setIdInstituicao("");
+      setTEventos("");
         alert("Cadastrado com sucesso");
       
       } catch (error) {
@@ -171,11 +209,21 @@ const EventosPage = () => {
                     setDataEvento(e.target.value);
                   }}
                 />
-                <Select options={instituicao}
-               
+                <Select option={instituicao}
+                name="instituicao"
+                id="instituicao"
+                manipulationFunction={(e) => {
+                  setIdInstituicao(e.target.value);
+                }}
+
                 
                 />
                 <SelectEv options={tipoEventos}
+                id="tEventos"
+                name="tEventos"
+                manipulationFunction={(e) => {
+                  setTEventos(e.target.value)
+                }}
                 />
                 
 
@@ -228,6 +276,23 @@ const EventosPage = () => {
                   }}
                 />
 
+                <Select option={instituicao}
+                name="instituicao"
+                id="instituicao"
+                manipulationFunction={(e) => {
+                  setIdInstituicao(e.target.value);
+                }}
+
+                />
+                <SelectEv options={tipoEventos}
+                id="tEventos"
+                name="tEventos"
+                manipulationFunction={(e) => {
+                  setTEventos(e.target.value)
+                }}
+                />
+
+
                 <Button 
                 textButton={"Atualizar"}
                 id={"atualizar"}
@@ -238,7 +303,7 @@ const EventosPage = () => {
                 textButton={"Cancelar"}
                 id={"cancelar"}
                 name={"cancelar"}
-                manipulationFunction={""}/ >
+                manipulationFunction={editActionAbort}/ >
                 </>
                 
 

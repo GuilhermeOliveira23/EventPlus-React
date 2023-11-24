@@ -48,41 +48,36 @@ return(
 
 
 export const Select = ({
-    options = [],
+    option = [],
+    name,
     id,
-    name ,
     required,
-    manipulationFunction,
-    defaultValue,
-    additionalClass
+    additionalClass,
+    manipulationFunction = "",
+    defaultValue
+
+
+
 }) => {
-return(
-    
-<select 
- name={name}
- id={id}
- required = {required}
- className={`input-component ${additionalClass}`}
- onChange={manipulationFunction}
- value={defaultValue}
+    return (
+        <select
+            name={name}
+            id={id}
+            required={required}
+            className={`input-component ${additionalClass}`}
+            onChange={manipulationFunction}
+            value={defaultValue}
+        >
+            <option value="">Selecione</option>
+            {option.map((opt) => {
+                return (
+                    <option key={opt.idInstituicao} value={opt.idInstituicao}>{opt.nomeFantasia}</option>
+                )
 
-  >
-    <option value="">Selecione a Instituicao</option>
+            })}
+        </select>
 
-    {options.map((opt) => {
-        return (
-            <option  key= {opt.idInstituicao} value={opt.idInstituicao}>{opt.nomeFantasia}</option>
-            
-        )
-    })}
-    
-
-</select>
-
-);
-
-
-
+    );
 }
 export const SelectEv = ({
     options = [],
