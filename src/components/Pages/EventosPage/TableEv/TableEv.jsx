@@ -21,8 +21,8 @@ const TableEv = ({ dados, fnUpdate = null, fnDelete = null }) => {
               <td className="table-data__head-title">{ev.nomeEvento}</td>
               <td className="table-data__head-title">{ev.descricao}</td>
               <td className="table-data__head-title">{ev.dataEvento}</td>
-              <td className="table-data__head-title">{ev.idTipoEvento}</td>
-              <td className="table-data__head-title">{ev.idInstituicao}</td>
+              <td className="table-data__head-title">{ev.tiposEvento.titulo}</td>
+              <td className="table-data__head-title">{ev.instituicao.nomeFantasia}</td>
 
               <td className="table-data__head-title--little">
                 <img className="table-data__icon"

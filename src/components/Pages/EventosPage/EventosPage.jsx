@@ -9,10 +9,12 @@ import Titulo from "../../Titulo/Titulo";
 import eventImage from "../../../assets/images/evento.svg";
 import TableEv from "./TableEv/TableEv";
 import Notification from "../../Notification/Notification";
+import Spinner from "../../Spinner/Spinner";
 
 const EventosPage = () => {
   const [frmEdit, setFrmEdit] = useState(false);
-
+  const [showSpinner, setShowSpinner] = useState(false)
+//States para puxar info 
   const [eventos, setEventos] = useState([]);
   const [tipoEventos, setTipoEventos] = useState([]);
   const [instituicao, setInstituicao] = useState([]);
@@ -22,6 +24,7 @@ const EventosPage = () => {
   const [descricao, setDescricao] = useState("");
   const [tEventos, setTEventos] = useState("")
   const [idInstituicao, setIdInstituicao] = useState("")
+  const [idEvento, setIdEvento] = useState(null)
 
   
 
@@ -29,9 +32,13 @@ const EventosPage = () => {
   
   
 
+ 
+  
+
   useEffect(() => {
     // chamar a api
     async function getEventos() {
+      setShowSpinner(true)
       try {
         const promise = await api.get("/Evento");
         const promiseTipoEventos = await api.get("/TiposEvento")
@@ -42,10 +49,24 @@ const EventosPage = () => {
         setInstituicao(promiseInstituicao.data);
         setTipoEventos(promiseTipoEventos.data); 
         console.log(promise.data)
+
+        const tiposDeEvento = promiseTipoEventos.data
+        const arrayMod = [];
+
+        tiposDeEvento.forEach(e=> {
+          arrayMod.push(
+            {
+              value: e.idTipoEvento,
+              text: e.titulo
+            }
+          )
+        });
+
       } catch (error) {
         console.log("Deu ruim na api");
         console.log(error);
       }
+      setShowSpinner(false)
     }
 
     getEventos();
@@ -54,23 +75,22 @@ const EventosPage = () => {
 
   
 
-  async function showUpdateForm(idEvento){
+  async function showUpdateForm(idElemento){
     setFrmEdit(true)
     try {
-    const retornoGetById = await api.get("/Evento/" + idEvento)
+      
+    const retornoGetById = await api.get("/Evento/" + idElemento)
     setNomeEvento(retornoGetById.data.nomeEvento);
     setDescricao(retornoGetById.data.descricao);
     setDataEvento(retornoGetById.data.dataEvento);
-    setIdInstituicao(retornoGetById.data.instituicao.nomeFantasia);
-    setTEventos(retornoGetById.data.tipoEventos.titulo);
+    setIdEvento(retornoGetById.data.idEvento);
+    
     
     } catch (error) {
       console.log("deu ruim no showUpdate")
       console.log(error)
     }
     
-
-
   }
   function editActionAbort() {
     
@@ -80,36 +100,62 @@ const EventosPage = () => {
     setDataEvento("");
     setIdInstituicao([]);
     setTEventos([]);
+    setIdEvento(null)
     
   }
 
    async function handleUpdate(e) {
     e.preventDefault();
     try {
-      // const retornoAtualizar =  await api.put("/Evento/"+ idEvento,
-      // {nomeEvento:nomeEvento,
-      // descricao:descricao,
-      // dataEvento:dataEvento,
-      // IdTipoEvento: tEventos,
-      // idInstituicao: idInstituicao
-      // })
-      console.log("Atualizado com sucesso")
+      const retornoAtualizar =  await api.put("/Evento/"+ idEvento,
+      {nomeEvento:nomeEvento,
+      descricao:descricao,
+      dataEvento:dataEvento,
+      IdTipoEvento: tEventos,
+      idInstituicao: idInstituicao
+      })
+      setNotifyUser({
+        titleNote : "Sucesso",
+        textNote : "Atualizado com sucesso",
+        imgIcon : "success",
+        imgAlt : "Imagem da ilustração de sucesso",
+        showMessage : true,
+        setNotifyUser,
+      })
+      
+      
       const retornoGet = await api.get("/Evento")
+      
       setEventos(retornoGet.data);
       editActionAbort();
 
-    } catch (error) {
-      console.log("Deu erro no update")
+    } 
+    catch (error) {
+      setNotifyUser({
+        titleNote : "Aviso",
+        textNote : "Erro ao atualizar",
+        imgIcon : "warning",
+        imgAlt : "Imagem da ilustração de aviso",
+        showMessage : true,
+        setNotifyUser,
+      })
     }
    
   }
 
   async function handleSubmit(e) {
     e.preventDefault();
-    alert("Cadastro indo")
+  
     
-    if (nomeEvento.trim().lenght < 3) {
-      alert("Nome deve ter mais de 3 caracteres")
+    if (nomeEvento.trim().length < 3) {
+      setNotifyUser({
+        titleNote : "Aviso",
+        textNote : "Nome deve ter no mínimo 3 caracteres",
+        imgIcon : "warning",
+        imgAlt : "Imagem da ilustração de sucesso",
+        showMessage : true,
+        setNotifyUser,
+      })
       return;
       }
       
@@ -122,6 +168,14 @@ const EventosPage = () => {
         idTipoEvento:tEventos
         })
 
+        setNotifyUser({
+          titleNote : "Sucesso",
+          textNote : "Cadastrado com sucesso",
+          imgIcon : "success",
+          imgAlt : "Imagem da ilustração de sucesso",
+          showMessage : true,
+          setNotifyUser,
+        })
       const retornoGet = await api.get("/Evento")
       setEventos(retornoGet.data)
       
@@ -134,7 +188,14 @@ const EventosPage = () => {
         alert("Cadastrado com sucesso");
       
       } catch (error) {
-        console.log("Deu ruim na api")
+        setNotifyUser({
+          titleNote : "Aviso",
+          textNote : "Erro ao Cadastrar",
+          imgIcon : "warning",
+          imgAlt : "Imagem da ilustração de aviso",
+          showMessage : true,
+          setNotifyUser,
+        })
         console.log(error)
       }
     
@@ -143,14 +204,29 @@ const EventosPage = () => {
 
     try {
       const retorno = await api.delete("/Evento/" + id)
-      alert("DELETADO COM SUCESSO")
+      setNotifyUser({
+        titleNote : "Sucesso",
+        textNote : "Deletado com sucesso",
+        imgIcon : "success",
+        imgAlt : "Imagem da ilustração de sucesso",
+        showMessage : true,
+        setNotifyUser,
+      })
 
 
       const retornoGet = await api.get("/Evento")
       setEventos(retornoGet.data)
 
     } catch (error) {
-      console.log("Deu ruim na api")
+
+      setNotifyUser({
+      titleNote : "Aviso",
+      textNote : "Erro ao deletar",
+      imgIcon : "warning",
+      imgAlt : "Imagem da ilustração de aviso",
+      showMessage : true,
+      setNotifyUser,
+    })
 
     }
   
@@ -158,6 +234,8 @@ const EventosPage = () => {
 
   return (
     <MainContent>
+      <Notification {...notifyUser} setNotifyUser={setNotifyUser}/>
+      {showSpinner ? <Spinner/> :null}
       <Container>
         <div className="cadastro-evento__box">
           <Titulo
@@ -226,10 +304,6 @@ const EventosPage = () => {
                 }}
                 />
                 
-
-                
-
-
                 <Button
                 textButton={"Cadastrar"}
                 id={"cadastrar"}
