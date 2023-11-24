@@ -12,12 +12,16 @@ import Notification from "../../Notification/Notification";
 import Spinner from "../../Spinner/Spinner";
 
 const EventosPage = () => {
+  //CSS funcionalidades
   const [frmEdit, setFrmEdit] = useState(false);
   const [showSpinner, setShowSpinner] = useState(false)
+  const [notifyUser, setNotifyUser] = useState({});
+
 //States para puxar info 
   const [eventos, setEventos] = useState([]);
   const [tipoEventos, setTipoEventos] = useState([]);
   const [instituicao, setInstituicao] = useState([]);
+
   //Variáveis
   const [nomeEvento, setNomeEvento] = useState("");
   const [dataEvento, setDataEvento] = useState("");
@@ -26,14 +30,7 @@ const EventosPage = () => {
   const [idInstituicao, setIdInstituicao] = useState("")
   const [idEvento, setIdEvento] = useState(null)
 
-  
 
-  const [notifyUser, setNotifyUser] = useState({});
-  
-  
-
- 
-  
 
   useEffect(() => {
     // chamar a api
@@ -50,17 +47,6 @@ const EventosPage = () => {
         setTipoEventos(promiseTipoEventos.data); 
         console.log(promise.data)
 
-        const tiposDeEvento = promiseTipoEventos.data
-        const arrayMod = [];
-
-        tiposDeEvento.forEach(e=> {
-          arrayMod.push(
-            {
-              value: e.idTipoEvento,
-              text: e.titulo
-            }
-          )
-        });
 
       } catch (error) {
         console.log("Deu ruim na api");
@@ -103,6 +89,13 @@ const EventosPage = () => {
     setIdEvento(null)
     
   }
+  // function fromToEventType(arrEvents) {
+  //   if (arrEvents.length === 0) return [];
+    
+  //   const arrAux = [];
+  //    arrEvents.forEach(event)
+      
+  // }
 
    async function handleUpdate(e) {
     e.preventDefault();
