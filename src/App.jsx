@@ -1,13 +1,19 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Rotas from './routes';
+import { UserContext } from './context/AuthContext';
 
 
 
 function App() {
+  const [userData,setUserData] = useState(UserContext);
+
+
   return (
-    <div>
+    
+      <UserContext.Provider value = {{userData,setUserData}}>
       <Rotas/>
-    </div>
+      </UserContext.Provider>
+    
   );
 }
 
