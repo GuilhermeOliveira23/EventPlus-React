@@ -1,12 +1,12 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Header from "./components/Header/Header"
-import HomePage from "./components/Pages/HomePage/HomePage";
-import LoginPage from "./components/Pages/LoginPage/LoginPage";
-import EventosPage from "./components/Pages/EventosPage/EventosPage";
-import TipoEventosPage from "./components/Pages/TipoEventosPage/TipoEventosPage";
-import TestePage from "./components/Pages/TestePage/TestePage";
-import Footer from "./components/Footer/Footer";
+import Header from "../components/Header/Header"
+import HomePage from "../components/Pages/HomePage/HomePage";
+import LoginPage from "../components/Pages/LoginPage/LoginPage";
+import EventosPage from "../components/Pages/EventosPage/EventosPage";
+import TipoEventosPage from "../components/Pages/TipoEventosPage/TipoEventosPage";
+import TestePage from "../components/Pages/TestePage/TestePage";
+import Footer from "../components/Footer/Footer";
 
 
 const Rotas = () => {

@@ -9,6 +9,7 @@ import api from '../../../Services/Services'
 import ContactSection from '../../ContactSection/ContactSection'
 import { useEffect, useState } from 'react';
 import { UserContext } from '../../../context/AuthContext';
+import './HomePage.css'
 
 const HomePage = () => {
   const {userData} = useContext(UserContext);
