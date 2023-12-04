@@ -6,7 +6,7 @@ export const UserContext = createContext(null)
 export const userDecodeToken = (theToken) =>{
         const decoded = jwtDecode(theToken);
     return {
-         perfil: decoded.name,
+         role: decoded.role,
          name: decoded.name,
          userId: decoded.jti,
          token:theToken

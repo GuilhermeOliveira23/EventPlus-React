@@ -44,9 +44,6 @@ return(
 
 }
 
-
-
-
 export const Select = ({
     option = [],
     name,
@@ -115,4 +112,36 @@ return(
 
 
 
+}
+export const SelectTp = ({
+    option = [],
+    name,
+    id,
+    required,
+    additionalClass,
+    manipulationFunction = "",
+    defaultValue
+
+
+
+}) => {
+    return (
+        <select
+            name={name}
+            id={id}
+            required={required}
+            className={`input-component ${additionalClass}`}
+            onChange={manipulationFunction}
+            value={defaultValue}
+        >
+            <option value="">Selecione</option>
+            {option.map((opt) => {
+                return (
+                    <option key={opt.value} value={opt.value}>{opt.text}</option>
+                )
+
+            })}
+        </select>
+
+    );
 }
