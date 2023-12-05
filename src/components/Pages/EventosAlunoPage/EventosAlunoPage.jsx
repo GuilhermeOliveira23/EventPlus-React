@@ -18,8 +18,8 @@ const EventosAlunoPage = () => {
   const [eventos, setEventos] = useState([]);
   // select mocado
   const [quaisEventos, setQuaisEventos] = useState([
-    { value: 1, text: "Todos os eventos" },
-    { value: 2, text: "Meus eventos" },
+    { value: "1", text: "Todos os eventos" },
+    { value: "2", text: "Meus eventos" },
   ]);
 
   const [tipoEvento, setTipoEvento] = useState("1"); //código do tipo do Evento escolhido
@@ -30,22 +30,27 @@ const EventosAlunoPage = () => {
   const { userData, setUserData } = useContext(UserContext);
 
   useEffect(() => {
-    loadEventsType();
-
+  
 async function loadEventsType() {
   setShowSpinner(true);
   try {
     
     if (tipoEvento === "1") {
       const retorno=  await api.get("/Evento")
-      console.log(retorno.data)
+      const retornoEv = await api.get(`/PresencasEvento/ListarMinhas/${userData.userId}`)
+
+      const dadosMarcados = verificaPresenca(retorno.data,retornoEv.data)
+      console.clear();
+      console.log("DADOS MARCADOS")
+      console.log(dadosMarcados)
+      
       setEventos(retorno.data);
     }else{
       let arrEventos = [];
-      const retornoEv = await api.get("/PresencasEvento/ListarMinhas/" + userData.userId )
+      const retornoEv = await api.get(`/PresencasEvento/ListarMinhas/${userData.userId}`)
       console.log(retornoEv.data)
-      retornoEv.data.array.forEach((element) => {
-      arrEventos.push(element.evento)
+      retornoEv.data.forEach((element) => {
+      arrEventos.push({...element.evento, situacao : element.situacao})
       });
       setEventos(arrEventos);
     }
@@ -53,13 +58,27 @@ async function loadEventsType() {
 
   } catch (error) {
     console.log("Erro ao carregar os eventos")
+    console.log(error);
   }
   setShowSpinner(false);
 
 }
-    
-  }, [tipoEvento]);
+loadEventsType();
+  }, [tipoEvento, userData.userId]);
 
+const verificaPresenca = (arrAllEvents, eventsUser) => {
+
+for (let x = 0; x < arrAllEvents.length; x++) {
+  for (let i = 0; i < eventsUser.length; i++) {
+   if (arrAllEvents[x].idEvento === eventsUser[i].idEvento)
+   {
+    arrAllEvents[x].situacao = true;
+    break;
+   }
+  }
+}
+return arrAllEvents;
+  }
   // toggle meus eventos ou todos os eventos
   function myEvents(tpEvent) {
     setTipoEvento(tpEvent);
@@ -97,6 +116,7 @@ async function loadEventsType() {
             defaultValue={tipoEvento}
             additionalClass="select-tp-evento"
           />
+
           <Table
             dados={eventos}
             fnConnect={handleConnect}
